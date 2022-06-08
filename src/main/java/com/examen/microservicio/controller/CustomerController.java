@@ -71,13 +71,6 @@ public class CustomerController {
     public ResponseEntity<Customer> getCustomer(@PathVariable(value = "customerId") String customerId) {
         LOGGER.info("Se hizo la petición de obtener cliente por id");
         Optional<Customer> customer = customerRepository.findById(customerId);
-
-        /*if (customer.isPresent()) {
-            return new ResponseEntity<>(customer.get(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(customer.get(), HttpStatus.NOT_FOUND);
-        }*/
-
         return new ResponseEntity<>(customer.get(), customer.isPresent() ? HttpStatus.OK : HttpStatus.NOT_FOUND);
     }
 

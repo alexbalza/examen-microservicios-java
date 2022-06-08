@@ -13,4 +13,5 @@ public class WithdrawalRequest {
     private String requestId;
     private String withdrawalAmount;
     private String afp;
+    private String customerId;
 }
