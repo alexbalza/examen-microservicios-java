@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/withdrawalrequest")
@@ -78,10 +79,10 @@ public class WithdrawalRequestController {
      * Método para listar Solicitudes
      * @return List, todas las solicitudes en una lista
      */
-    @GetMapping("/list")
+    @GetMapping("/list/{customerId}")
     @ResponseStatus(HttpStatus.OK)
-    public List<WithdrawalRequest> listWithdrawalRequests() {
+    public List<WithdrawalRequest> listWithdrawalRequestsByCustomerId(@PathVariable(value = "customerId") String customerId) {
         LOGGER.info("Se hizo la petición de listar solicitudes");
-        return withdrawalRequestRepository.findAll();
+        return withdrawalRequestRepository.findAll().stream().filter(wr -> wr.getCustomerId().equals(customerId)).collect(Collectors.toList());
     }
 }
