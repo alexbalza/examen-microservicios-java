@@ -22,20 +22,29 @@ public class CustomerController {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     /**
-    * Método para regitrar cliente
-    * @param customer la entidad cliente que va a ser registrada
-    * @return String, mensaje de confirmación
-    */
+     * Método para regitrar cliente
+     *
+     * @param customer la entidad cliente que va a ser registrada
+     * @return String, mensaje de confirmación
+     */
     @PostMapping("/insert")
     @ResponseStatus(HttpStatus.OK)
     public String createCustomer(@RequestBody Customer customer) {
         LOGGER.info("Se hizo la petición de registrar cliente");
-        customerRepository.save(customer);
-        return "Se ha registrado correctamente el cliente " + customer.getFirstName() + " " + customer.getLastName();
+        String dni = customer.getDni();
+        Optional<Customer> customer1 = listCustomers().stream().filter(c1 -> c1.getDni().equals(dni)).findFirst();
+
+        if (customer1.isPresent()) {
+            return "Ya hay un cliente con el mismo dni";
+        } else {
+            customerRepository.save(customer);
+            return "Se ha registrado correctamente el cliente " + customer.getFirstName() + " " + customer.getLastName();
+        }
     }
 
     /**
      * Método para actualizar cliente
+     *
      * @param customer,customerId la entidad cliente que va a ser actualizada por el id
      * @return customer con los datos actualizados
      */
@@ -50,6 +59,7 @@ public class CustomerController {
 
     /**
      * Método para eliminar cliente
+     *
      * @param customerId el id de cliente que se va a usar para eliminar
      * @return String, mensaje de confirmación
      */
@@ -63,6 +73,7 @@ public class CustomerController {
 
     /**
      * Método para obtener cliente
+     *
      * @param customerId el id por el cual se va a obtener la entidad
      * @return ResponseEntity, cliente con los datos ya actualizados
      */
@@ -76,6 +87,7 @@ public class CustomerController {
 
     /**
      * Método para listar clientes
+     *
      * @return List, lista de tidos los clientes
      */
     @GetMapping("/list")
